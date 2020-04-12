@@ -2,6 +2,7 @@
 package easy
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 	"time"
@@ -47,15 +48,29 @@ func (f *Formatter) Format(entry *logrus.Entry) ([]byte, error) {
 	for k, val := range entry.Data {
 		switch v := val.(type) {
 		case string:
-			output = strings.Replace(output, "%"+k+"%", v, 1)
+			if strings.Contains(output, "%"+k+"%") {
+				output = strings.Replace(output, "%"+k+"%", v, 1)
+			} else {
+				output = output + fmt.Sprintf(" | %s=%s", k, v)
+			}
 		case int:
 			s := strconv.Itoa(v)
-			output = strings.Replace(output, "%"+k+"%", s, 1)
+			if strings.Contains(output, "%"+k+"%") {
+				output = strings.Replace(output, "%"+k+"%", s, 1)
+			} else {
+				output = output + fmt.Sprintf(" | %s=%s", k, s)
+			}
 		case bool:
 			s := strconv.FormatBool(v)
-			output = strings.Replace(output, "%"+k+"%", s, 1)
+			if strings.Contains(output, "%"+k+"%") {
+				output = strings.Replace(output, "%"+k+"%", s, 1)
+			} else {
+				output = output + fmt.Sprintf(" | %s=%s", k, s)
+			}
 		}
 	}
+
+	output = output + "\n"
 
 	return []byte(output), nil
 }

@@ -1,4 +1,4 @@
-module github.com/t-tomalak/logrus-easy-formatter
+module github.com/jamesvoong/logrus-ez-formatter
 
 go 1.12
 
